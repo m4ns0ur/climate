@@ -49,7 +49,7 @@ func (c *cover) run() bool {
 	// something like that. In this case, it's better to print a custom message
 	// than what err.Error() says (which is not very useful here...).
 	if err != nil {
-		printResult("`go test` failed!\n", errored)
+		printResult("cover", "`go test` failed!\n", errored)
 		return false
 	}
 
@@ -58,7 +58,7 @@ func (c *cover) run() bool {
 	if len(matches) == 2 {
 		thresh, err := strconv.ParseFloat(matches[1], 64)
 		if err != nil {
-			printResult(err.Error(), errored)
+			printResult("cover", err.Error(), errored)
 			return false
 		}
 		if c.open {
@@ -68,11 +68,11 @@ func (c *cover) run() bool {
 		if thresh < c.threshold {
 			str := fmt.Sprintf("Coverage required: %.2f%%, got: %.2f%%\n",
 				c.threshold, thresh)
-			printResult(str, failed)
+			printResult("cover", str, failed)
 			return false
 		}
 	}
 
-	printResult("", ok)
+	printResult("cover", "", ok)
 	return true
 }

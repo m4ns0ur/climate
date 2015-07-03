@@ -34,7 +34,7 @@ func (ec *errcheck) run() bool {
 
 	path := getPath()
 	if path == "" {
-		printResult("Could not locate package", failed)
+		printResult("errcheck", "Could not locate package", failed)
 		return false
 	}
 
@@ -49,13 +49,13 @@ func (ec *errcheck) run() bool {
 
 	if err != nil {
 		if str := out.String(); str != "" {
-			printResult(str, failed)
+			printResult("errcheck", str, failed)
 		} else {
-			printResult(errOut.String(), failed)
+			printResult("errcheck", errOut.String(), failed)
 		}
 		return false
 	}
-	printResult("", ok)
+	printResult("errcheck", "", ok)
 	return true
 }
 

@@ -11,6 +11,11 @@ import (
 	"os"
 )
 
+var (
+	// TODO: think of something cleaner?
+	compact bool
+)
+
 func main() {
 	backends := []backend{
 		&cover{},
@@ -23,6 +28,9 @@ func main() {
 	for _, backend := range backends {
 		backend.setOptions()
 	}
+	// TODO: fails horribly if we just want to "climate -failsOnly" because the
+	// current CLI is utter bullshit.
+	flag.BoolVar(&compact, "compact", false, "The results are given in a compact format.")
 	flag.Parse()
 
 	all := flag.NFlag() == 0

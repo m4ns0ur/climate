@@ -35,9 +35,9 @@ func (l *lint) run() bool {
 	_ = cmd.Run()
 
 	if out.String() != "" {
-		printResult(out.String(), failed)
+		printResult("lint", out.String(), failed)
 		return false
 	}
-	printResult("", ok)
+	printResult("lint", "", ok)
 	return true
 }

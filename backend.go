@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mssola/colors"
 )
@@ -27,12 +28,32 @@ type backend interface {
 }
 
 func printBackendStatus(name string) {
-	c := colors.Default()
-	c.SetMode(colors.Bold)
-	fmt.Printf(c.Get(fmt.Sprintf("%v: ", name)))
+	if !compact {
+		c := colors.Default()
+		c.SetMode(colors.Bold)
+		fmt.Printf(c.Get(fmt.Sprintf("%v: ", name)))
+	}
 }
 
-func printResult(output string, status int) {
+// TODO: factor this out, so we don't have to pass the name...
+func printResult(name, output string, status int) {
+	if !compact {
+		prettifyStatus(status)
+	}
+	if output != "" {
+		if compact {
+			for _, v := range strings.Split(output, "\n") {
+				if v != "" {
+					fmt.Printf("%v:%v\n", name, v)
+				}
+			}
+		} else {
+			fmt.Printf("%v", output)
+		}
+	}
+}
+
+func prettifyStatus(status int) {
 	var fg colors.Colors
 	if status == ok {
 		fg = colors.Saved
@@ -53,9 +74,6 @@ func printResult(output string, status int) {
 		fmt.Printf(c.Get("FAILED\n"))
 	case errored:
 		fmt.Printf(c.Get("ERROR\n"))
-	}
-	if output != "" {
-		fmt.Printf("%v", output)
 	}
 }
 

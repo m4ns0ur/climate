@@ -35,9 +35,9 @@ func (v *vet) run() bool {
 	err := cmd.Run()
 
 	if err != nil {
-		printResult(out.String(), failed)
+		printResult("vet", out.String(), failed)
 		return false
 	}
-	printResult("", ok)
+	printResult("vet", "", ok)
 	return true
 }

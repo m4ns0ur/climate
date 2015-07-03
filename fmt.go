@@ -35,16 +35,16 @@ func (f *gofmt) run() bool {
 	err := cmd.Run()
 
 	if err != nil {
-		printResult(err.Error(), errored)
+		printResult("fmt", err.Error(), errored)
 		return false
 	}
 
 	// And print out the results.
 	results := out.String()
 	if results == "" {
-		printResult("", ok)
+		printResult("fmt", "", ok)
 		return true
 	}
-	printResult(out.String(), failed)
+	printResult("fmt", out.String(), failed)
 	return false
 }
