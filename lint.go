@@ -26,10 +26,10 @@ func (l *lint) isSet() bool {
 	return l.set
 }
 
-func (l *lint) run() bool {
+func (l *lint) run(pack string) bool {
 	printBackendStatus("lint")
 
-	cmd := exec.Command("golint", ".")
+	cmd := exec.Command("golint", pack)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	_ = cmd.Run()

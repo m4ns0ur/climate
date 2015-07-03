@@ -26,10 +26,16 @@ func (f *gofmt) isSet() bool {
 	return f.set
 }
 
-func (f *gofmt) run() bool {
+func (f *gofmt) run(pack string) bool {
 	printBackendStatus("fmt")
 
-	cmd := exec.Command("gofmt", "-d", "-e", ".")
+	// Unfortunately, gofmt needs either the relative or the absolute path, the
+	// import path is not enough.
+	if pack == "." {
+		pack = packageAbs(pack)
+	}
+
+	cmd := exec.Command("gofmt", "-d", "-e", pack)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()

@@ -31,15 +31,28 @@ func main() {
 	flag.BoolVar(&compact, "compact", false, "The results are given in a compact format.")
 	flag.Parse()
 
-	// Decide whether to run all the backends are just some of them.
+	// Decide whether to run all the backends or just some of them.
 	nflags := flag.NFlag()
 	all := nflags == 0 || (nflags == 1 && compact)
+
+	pack := "."
+	if flag.NArg() == 1 {
+		pack = os.Args[len(os.Args)-1]
+		if !packageExists(pack) {
+			fmt.Printf("Given package %v does not exist.\n", pack)
+			os.Exit(1)
+		}
+	} else {
+		fmt.Printf("Wrong number of arguments.\n")
+		flag.Usage()
+		os.Exit(1)
+	}
 
 	// And finally execute all you can.
 	hasErrors, executed := false, false
 	for _, backend := range backends {
 		if backend.installed() && (all || backend.isSet()) {
-			if !backend.run() {
+			if !backend.run(pack) {
 				hasErrors = true
 			}
 			executed = true

@@ -26,10 +26,10 @@ func (v *vet) isSet() bool {
 	return v.set
 }
 
-func (v *vet) run() bool {
+func (v *vet) run(pack string) bool {
 	printBackendStatus("vet")
 
-	cmd := exec.Command("go", "vet")
+	cmd := exec.Command("go", "vet", pack)
 	var out bytes.Buffer
 	cmd.Stderr = &out
 	err := cmd.Run()

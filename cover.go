@@ -40,10 +40,10 @@ func (c *cover) isSet() bool {
 	return c.set || c.open == false || c.threshold != defaultThreshold
 }
 
-func (c *cover) run() bool {
+func (c *cover) run(pack string) bool {
 	printBackendStatus("cover")
 
-	cmd := exec.Command("go", "test", "-coverprofile=c.out", "-covermode=count")
+	cmd := exec.Command("go", "test", "-coverprofile=c.out", "-covermode=count", pack)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()

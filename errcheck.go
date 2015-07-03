@@ -29,19 +29,22 @@ func (ec *errcheck) isSet() bool {
 	return ec.set
 }
 
-func (ec *errcheck) run() bool {
+func (ec *errcheck) run(pack string) bool {
 	printBackendStatus("errcheck")
 
-	path := getPath()
-	if path == "" {
-		printResult("errcheck", "Could not locate package", failed)
-		return false
+	// Try to fetch the package import from what we've got.
+	if pack == "." {
+		pack = getPath()
+		if pack == "" {
+			printResult("errcheck", "Could not locate package", failed)
+			return false
+		}
 	}
 
 	// The errcheck has two possible errors:
 	//   - exit(1): there are some checks that are not passing.
 	//   - exit(2): the package could not be parsed.
-	cmd := exec.Command("errcheck", path)
+	cmd := exec.Command("errcheck", pack)
 	var out, errOut bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &errOut

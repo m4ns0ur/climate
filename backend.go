@@ -24,7 +24,7 @@ type backend interface {
 	setOptions()
 	installed() bool
 	isSet() bool
-	run() bool
+	run(pack string) bool
 }
 
 func printBackendStatus(name string) {
@@ -78,19 +78,30 @@ func prettifyStatus(status int) {
 }
 
 func packageExists(importPath string) bool {
-	if packageExistsIn("GOPATH", importPath) {
-		return true
+	_, exists := packageExistsIn("GOPATH", importPath)
+	if !exists {
+		_, exists = packageExistsIn("GOROOT", importPath)
 	}
-	return packageExistsIn("GOROOT", importPath)
+	return exists
 }
 
-func packageExistsIn(env, importPath string) bool {
+func packageAbs(pack string) string {
+	path, _ := packageExistsIn("GOPATH", pack)
+	if path == "" {
+		path, _ = packageExistsIn("GOROOT", pack)
+	}
+	return path
+}
+
+func packageExistsIn(env, importPath string) (string, bool) {
 	base := os.Getenv(env)
 	if base == "" {
-		return false
+		return "", false
 	}
 
 	path := filepath.Join(base, "src", importPath)
-	_, err := os.Stat(path)
-	return err == nil
+	if _, err := os.Stat(path); err == nil {
+		return path, true
+	}
+	return "", false
 }
