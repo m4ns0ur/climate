@@ -28,12 +28,14 @@ func main() {
 	for _, backend := range backends {
 		backend.setOptions()
 	}
-	// TODO: fails horribly if we just want to "climate -failsOnly" because the
-	// current CLI is utter bullshit.
 	flag.BoolVar(&compact, "compact", false, "The results are given in a compact format.")
 	flag.Parse()
 
-	all := flag.NFlag() == 0
+	// Decide whether to run all the backends are just some of them.
+	nflags := flag.NFlag()
+	all := nflags == 0 || (nflags == 1 && compact)
+
+	// And finally execute all you can.
 	hasErrors, executed := false, false
 	for _, backend := range backends {
 		if backend.installed() && (all || backend.isSet()) {
@@ -44,10 +46,11 @@ func main() {
 		}
 	}
 
-	if !executed {
-		fmt.Printf("There were no available backends!\n")
-	} else if hasErrors {
+	if hasErrors {
 		os.Exit(1)
+	}
+	if !compact && !executed {
+		fmt.Printf("There were no available backends!\n")
 	}
 	os.Exit(0)
 }

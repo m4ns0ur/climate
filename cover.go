@@ -14,6 +14,8 @@ import (
 	"strconv"
 )
 
+const defaultThreshold = 80.0
+
 type cover struct {
 	set       bool
 	open      bool
@@ -25,7 +27,7 @@ func (c *cover) setOptions() {
 	flag.BoolVar(&c.open, "open", true,
 		"Open the results of the cover tool on the browser.")
 	flag.Float64Var(&c.threshold,
-		"threshold", 80.0, "The accepted code coverage threshold.")
+		"threshold", defaultThreshold, "The accepted code coverage threshold.")
 }
 
 func (c *cover) installed() bool {
@@ -33,7 +35,9 @@ func (c *cover) installed() bool {
 }
 
 func (c *cover) isSet() bool {
-	return c.set
+	// Returns true when it has been either explicitly set, or an option has
+	// actually been modified from its default value.
+	return c.set || c.open == false || c.threshold != defaultThreshold
 }
 
 func (c *cover) run() bool {
