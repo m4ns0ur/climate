@@ -94,14 +94,16 @@ func packageAbs(pack string) string {
 }
 
 func packageExistsIn(env, importPath string) (string, bool) {
-	base := os.Getenv(env)
-	if base == "" {
+	str := os.Getenv(env)
+	if str == "" {
 		return "", false
 	}
 
-	path := filepath.Join(base, "src", importPath)
-	if _, err := os.Stat(path); err == nil {
-		return path, true
+	for _, base := range strings.Split(str, ":") {
+		path := filepath.Join(base, "src", importPath)
+		if _, err := os.Stat(path); err == nil {
+			return path, true
+		}
 	}
 	return "", false
 }
