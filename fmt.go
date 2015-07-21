@@ -31,7 +31,7 @@ func (f *gofmt) run(pack string) bool {
 
 	// Unfortunately, gofmt needs either the relative or the absolute path, the
 	// import path is not enough.
-	if pack == "." {
+	if pack != "." {
 		pack = packageAbs(pack)
 	}
 
