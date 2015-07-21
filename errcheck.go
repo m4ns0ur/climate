@@ -70,17 +70,19 @@ func getPath() string {
 }
 
 func getPathFrom(env string) string {
-	base := os.Getenv(env)
-	if base == "" {
+	str := os.Getenv(env)
+	if str == "" {
 		return ""
 	}
 
-	// We add the separator so it gets matched on the `strings.Replace` call
-	// and the final path doesn't start with the separator.
-	path := filepath.Join(base, "src") + string(filepath.Separator)
-	abs, err := filepath.Abs(".")
-	if err != nil || !strings.HasPrefix(abs, path) {
-		return ""
+	for _, base := range strings.Split(str, ":") {
+		// We add the separator so it gets matched on the `strings.Replace` call
+		// and the final path doesn't start with the separator.
+		path := filepath.Join(base, "src") + string(filepath.Separator)
+		abs, err := filepath.Abs(".")
+		if err == nil && strings.HasPrefix(abs, path) {
+			return strings.Replace(abs, path, "", 1)
+		}
 	}
-	return strings.Replace(abs, path, "", 1)
+	return ""
 }
