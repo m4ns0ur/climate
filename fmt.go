@@ -35,7 +35,7 @@ func (f *gofmt) run(pack string) bool {
 		pack = packageAbs(pack)
 	}
 
-	cmd := exec.Command("gofmt", "-d", "-e", pack)
+	cmd := exec.Command("go", "fmt", pack)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
