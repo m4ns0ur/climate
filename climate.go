@@ -19,9 +19,10 @@ var (
 func main() {
 	backends := []backend{
 		&cover{},
-		&gofmt{},
 		&errcheck{},
+		&gofmt{},
 		&lint{},
+		&race{},
 		&vet{},
 	}
 
