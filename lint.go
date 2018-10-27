@@ -19,7 +19,7 @@ func (l *lint) setOptions() {
 }
 
 func (l *lint) installed() bool {
-	return packageExists("github.com/golang/lint/golint")
+	return packageExists("golang.org/x/lint/golint")
 }
 
 func (l *lint) isSet() bool {
